@@ -2,7 +2,7 @@
 
 ## 运行环境介绍 ##
 
-系统：kaili 2016
+系统：kali 2016
 
 软件：python3.5 , 基于 pyquery 和 requests 2个模块
 
