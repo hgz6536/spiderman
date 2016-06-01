@@ -17,9 +17,12 @@ cook = {
 
 
 def GetProxy(filename):
+    if not os.path.exists(filename):
+        GetHtml('http://www.xicidaili.com/nn', 'daili.html')
+    proxy = []
     doc = pq(filename=filename)
     for tr in doc('tr').items():
-        proxy = []
+
         for i in tr('.odd').items():
             ip = i.eq(0).text().split()[0]
             port = i.eq(0).text().split()[1]
@@ -27,14 +30,14 @@ def GetProxy(filename):
     return proxy
 
 
-def GetHtml(url, filename):
+def GetHtml(url, filename, proxy=None):
     my_header = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36',
         'Referer': url,
         'Connection': 'keep-alive',
     }
 
-    urlpage = requests.get(url, headers=my_header)
+    urlpage = requests.get(url, headers=my_header, proxies=proxy)
     print(u'下载-----%s' % url)
     if urlpage.status_code == 200:
         urlpage.encoding = 'utf-8'
@@ -47,38 +50,19 @@ def GetHtml(url, filename):
         finally:
             fp.close()
             print(u'下载-----%s-----成功' % url)
+            return urlpage.status_code
     else:
-        print(u'HTTP状态码:%d,反爬机制起作用了,我们开始启用自动代理' % urlpage.status_code)
-        ip_list = GetProxy('daili.html')
-        proxies = {
-            'http': 'http://%s' % ip_list[0]
-        }
-
-        urlpage = requests.get(url, headers=my_header, proxies=proxies)
-        while urlpage.status_code != 200:
-            del ip_list[0]
-            if len(ip_list) == 0:
-                GetHtml('http://www.xicidaili.com/nn', 'daili.html')
-                ip_list = GetProxy('daili.html')
-            proxies = {
-                'http': 'http://%s' % ip_list[0]}
-            urlpage = requests.get(url, headers=my_header, proxies=proxies)
-        urlpage.encoding = 'utf-8'
-        try:
-            fp = open(filename, 'w')
-        except Exception as e:
-            print(e)
-        finally:
-            fp.close()
-            print(u'下载-----%s-----成功' % url)
+        return urlpage.status_code
 
 
 def GetPageNum():
-    GetHtml('http://jandan.net/ooxx', 'ooxx.html')
-    html = pq(filename='ooxx.html')
-    current_page_num = html('.current-comment-page')
-    current_page_num = current_page_num.eq(0).text().strip('[]')
-    return current_page_num
+    if not os.path.exists('ooxx.html'):
+        GetHtml('http://jandan.net/ooxx', 'ooxx.html')
+    else:
+        html = pq(filename='ooxx.html')
+        current_page_num = html('.current-comment-page')
+        current_page_num = current_page_num.eq(0).text().strip('[]')
+        return current_page_num
 
 
 def GetImageUrl(filename):
