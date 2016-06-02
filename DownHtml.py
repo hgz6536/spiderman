@@ -63,6 +63,8 @@ def GetPageNum():
         current_page_num = current_page_num.eq(0).text().strip('[]')
         return current_page_num
     else:
+        os.remove('ooxx.html')
+        GetHtml('http://jandan.net/ooxx', 'ooxx.html')
         html = pq(filename='ooxx.html')
         current_page_num = html('.current-comment-page')
         current_page_num = current_page_num.eq(0).text().strip('[]')
