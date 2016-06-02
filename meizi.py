@@ -1,4 +1,10 @@
 # -*-coding:UTF-8 -*-
+# ################################
+#   ___   _____  ____  __
+#  / _ \ / _ \ \/ /\ \/ /
+# | (_) | (_) >  <  >  < 
+#  \___/ \___/_/\_\/_/\_\
+# ################################
 import os
 from DownHtml import GetHtml, GetPageNum, GetImageUrl, GetImage, GetProxy
 
