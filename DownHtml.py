@@ -18,7 +18,7 @@ cook = {
 
 def GetProxy(filename):
     if not os.path.exists(filename):
-        GetHtml('http://www.xicidaili.com/nn', 'daili.html')
+        GetHtml('http://www.xicidaili.com/nn', filename)
     proxy = []
     doc = pq(filename=filename)
     for tr in doc('tr').items():
