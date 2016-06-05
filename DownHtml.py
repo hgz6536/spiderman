@@ -30,6 +30,19 @@ def GetProxy(filename):
     return proxy
 
 
+def CheckProxy(ip_port):
+    proxies = {
+        'http': 'http://%s' % ip_port
+    }
+    try:
+        requests.get('https://www.baidu.com', timeout=5, proxies=proxies)
+    except Exception as e:
+        if 'time' in str(e):
+            return 'timeout'
+        else:
+            return e
+
+
 def GetHtml(url, filename, proxy=None):
     my_header = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36',
