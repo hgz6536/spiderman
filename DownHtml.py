@@ -26,7 +26,11 @@ def GetProxy(filename):
         for i in tr('.odd').items():
             ip = i.eq(0).text().split()[0]
             port = i.eq(0).text().split()[1]
-            proxy.append(ip + ":" + port)
+            res = CheckProxy(ip + ":" + port)
+            if res != 200:
+                pass
+            else:
+                proxy.append(ip + ":" + port)
     return proxy
 
 
@@ -35,12 +39,14 @@ def CheckProxy(ip_port):
         'http': 'http://%s' % ip_port
     }
     try:
-        requests.get('https://www.baidu.com', timeout=5, proxies=proxies)
+        r = requests.get('https://www.baidu.com', timeout=10, proxies=proxies)
     except Exception as e:
         if 'time' in str(e):
             return 'timeout'
         else:
             return e
+    finally:
+        return r.status_code
 
 
 def GetHtml(url, filename, proxy=None):
@@ -68,20 +74,20 @@ def GetHtml(url, filename, proxy=None):
         return urlpage.status_code
 
 
-def GetPageNum():
-    if not os.path.exists('ooxx.html'):
-        GetHtml('http://jandan.net/ooxx', 'ooxx.html')
-        html = pq(filename='ooxx.html')
-        current_page_num = html('.current-comment-page')
-        current_page_num = current_page_num.eq(0).text().strip('[]')
-        return current_page_num
+def GetPageNum(filename):
+    code = GetHtml('http://jandan.net/ooxx', filename)
+    if code != 200:
+        ip_list = GetProxy('daili.html')
+        proxies = {
+            'http': 'http://%s' % ip_list[0]
+        }
+        code = GetHtml('http://jandan.net/ooxx', filename, proxy=proxies)
     else:
-        os.remove('ooxx.html')
-        GetHtml('http://jandan.net/ooxx', 'ooxx.html')
-        html = pq(filename='ooxx.html')
-        current_page_num = html('.current-comment-page')
-        current_page_num = current_page_num.eq(0).text().strip('[]')
-        return current_page_num
+        pass
+    html = pq(filename=filename)
+    current_page_num = html('.current-comment-page')
+    current_page_num = current_page_num.eq(0).text().strip('[]')
+    return current_page_num
 
 
 def GetImageUrl(filename):
