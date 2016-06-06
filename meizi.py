@@ -2,14 +2,15 @@
 # ################################
 #   ___   _____  ____  __
 #  / _ \ / _ \ \/ /\ \/ /
-# | (_) | (_) >  <  >  < 
+# | (_) | (_) >  <  >  <
 #  \___/ \___/_/\_\/_/\_\
 # ################################
+
 import os
 from DownHtml import GetHtml, GetPageNum, GetImageUrl, GetImage, GetProxy
 
 
-page_num = GetPageNum()
+page_num = GetPageNum('ooxx.html')
 print(u'当前ooxx总页数:%s' % page_num)
 ip_list = GetProxy('daili.html')
 for i in range(1500, int(page_num)):
