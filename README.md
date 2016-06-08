@@ -1,10 +1,10 @@
-# spiderman
+# Spiderman
 
 ## 运行环境介绍 ##
 
-系统：kali 2016
+系统：KaLi 2016
 
-软件：python3.5 , 基于 pyquery 和 requests 2个模块
+软件：Python3.5 , 基于 PyQuery 和 Requests 2个模块
 
 ## 目的 ##
 主要是为了学习这2个模块才写了这个蜘蛛脚本.
